@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const Counter = (props) => {
+
+
+class Counter extends Component {
+
+    render() {
+        const {index, onIncrement, onDecrement, onSetColor, number, color} = this.props;
         return (
-            <div className="Counter" style={{backgroundColor: props.color}}
-            onClick={() => props.onIncrease(props.index)}
+            <div className="Counter" style={{backgroundColor: color}} 
+            onClick={() => onIncrement(index)}
             onContextMenu={(event) => {
-                //console.log(event.target.className);
                 event.preventDefault();
-                props.onDecrease(props.index);
+                onDecrement();
             }}
-            onDoubleClick={(event)=> {
-                props.onChangeBackground(props.index);
-            }}
-            >
-                {props.number}
+            onDoubleClick={() => onSetColor(index)}>
+                {number}
             </div>
-        );
+        )
+
+    }
 }
 
 export default Counter;

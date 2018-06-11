@@ -4,6 +4,8 @@ import Counters from './counters';
 import Button from './button';
 import Footer from './footer';
 import './App.css';
+import { connect } from 'react-redux';
+import * as actions from './actions';
 
 const colors = [ 
   "red",
@@ -13,65 +15,19 @@ const colors = [
   "green"
 ];
 
+const randomColor = () => {
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
 class App extends Component {
-  state = {
-    counters: [{number: 0, color: 'red'}]
-  };
-
-  randomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  onIncrease = (index) => {
-    // this.state.counters[index].number += 1;
-    // this.setState( this.state.counters );
-    this.setState({
-     counters : [...this.state.counters.slice(0, index),
-       {...this.state.counters[index], number: this.state.counters[index].number + 1},
-       ...this.state.counters.slice(index+1)
-     ]
-  })
-  }
-
-  onDecrease = (index) => {
-    this.setState({
-      counters: this.state.counters.map((item) => ({number: item.number -1, color:  item.color}))
-    })
-  }
-
-  onChangeBackground = (index) => {
-    this.setState({
-      counters : [...this.state.counters.slice(0, index),
-        {number: this.state.counters[index].number, color: this.randomColor()},
-        ...this.state.counters.slice(index+1)
-      ]
-    })
-  }
-
-  onCreate = () => {
-    console.log("Create");
-    this.setState({
-      counters: [
-        ...this.state.counters, {number: 0, color: 'red'}
-      ]
-    })
-  }
-
-  onDelete = () => {
-    this.setState({
-      counters: [
-        ...this.state.counters.slice(0, this.state.counters.length-1)
-      ]
-    })
-  }
 
   render() {
     return (  //jsx
       <div>
         <Header />
         <hr />
-        <Counters counters={this.state.counters} onIncrease={this.onIncrease} onDecrease={this.onDecrease} onChangeBackground={this.onChangeBackground} />
-        <Button onCreate={this.onCreate} onDelete={this.onDelete} />
+        <Counters {...this.props} />
+        <Button onCreate={this.props.onCreate} onDelete={this.props.onDelete} />
         <hr />
         <Footer />
       </div>
@@ -79,4 +35,19 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToPass = (state) => ({
+  counters: state.counters
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onIncrement: (index) => dispatch(actions.increment(index)),
+  onDecrement: () => dispatch(actions.decrement()),
+  onSetColor: (index) => {
+    let color = randomColor();
+    dispatch(actions.setColor(index, color))
+  },
+  onCreate: () => dispatch(actions.create()),
+  onDelete: () => dispatch(actions.remove())
+});
+
+export default connect(mapStateToPass, mapDispatchToProps)(App);

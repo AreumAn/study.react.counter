@@ -11,4 +11,17 @@ const Counters = (props) => {
     </div>);
 }
 
+
+// const Counters = ({counters, onIncrement, onDecrement, onSetColor}) => {
+//     return (
+//         <div className="CounterList">
+//             {
+//                 counters.map((item, index) => (
+//                     <Counter key={index} index={index} number={item.number} color={item.color} onIncrement={onIncrement} onDecrement={onDecrement} onSetColor={onSetColor}/>
+//                 ))
+//             }
+//         </div>
+//     )
+// }
+
 export default Counters;
